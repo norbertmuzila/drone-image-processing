@@ -1,0 +1,101 @@
+/* Append to existing styles.css logic */
+
+.hero-buttons {
+    display: flex;
+    gap: 1rem;
+}
+
+.secondary-btn {
+    border-color: rgba(255,255,255,0.2);
+    color: var(--text-primary);
+}
+
+.secondary-btn:hover {
+    background: rgba(255,255,255,0.1);
+    box-shadow: none;
+    color: var(--text-primary);
+}
+
+/* Gallery Styles */
+.gallery-title {
+    font-family: var(--font-heading);
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+    color: var(--accent-color);
+}
+
+.video-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.video-item {
+    background: #000;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid var(--card-border);
+    transition: transform 0.3s ease;
+}
+
+.video-item:hover {
+    transform: scale(1.02);
+    border-color: var(--accent-color);
+}
+
+.video-item img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.video-label {
+    padding: 0.8rem;
+    font-size: 0.9rem;
+    text-align: center;
+    color: var(--text-secondary);
+    background: rgba(25, 25, 25, 0.8);
+}
+
+.masonry-grid {
+    column-count: 3;
+    column-gap: 1.5rem;
+}
+
+@media (max-width: 900px) {
+    .masonry-grid { column-count: 2; }
+}
+
+@media (max-width: 600px) {
+    .masonry-grid { column-count: 1; }
+}
+
+.gallery-item {
+    break-inside: avoid;
+    margin-bottom: 1.5rem;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid var(--card-border);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.gallery-item:hover {
+    transform: translateY(-5px);
+    border-color: var(--accent-color);
+    box-shadow: 0 10px 20px rgba(0, 229, 255, 0.1);
+}
+
+.gallery-item img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* Leaflet Overrides */
+.leaflet-container {
+    background: #111 !important;
+}
+.leaflet-control-attribution a {
+    color: var(--accent-color) !important;
+}

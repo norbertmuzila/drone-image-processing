@@ -4,10 +4,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Drone GIS Analytics Platform</title>
+    
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Outfit:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    
+    <!-- Custom CSS -->
     <link rel="stylesheet" href="styles.css">
+
+    <!-- Three.js Import Map -->
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+            }
+        }
+    </script>
 </head>
 <body>
     <div class="background-effects">
@@ -21,9 +38,11 @@
         </div>
         <nav>
             <ul>
-                <li><a href="#overview">Overview</a></li>
-                <li><a href="#mosaic">Mosaic Viewer</a></li>
-                <li><a href="#vegetation">Vegetation Analysis</a></li>
+                <li><a href="#overview">Analytics</a></li>
+                <li><a href="#gis-map">Georef Map</a></li>
+                <li><a href="#sfm-3d">3D SfM Viewer</a></li>
+                <li><a href="#vegetation">NCVI</a></li>
+                <li><a href="#media-gallery">Media Gallery</a></li>
             </ul>
         </nav>
     </header>
@@ -31,10 +50,14 @@
     <main>
         <section class="hero">
             <h1 class="hero-title">High-Fidelity <br><span class="accent-gradient">Drone Intelligence</span></h1>
-            <p class="hero-subtitle">Georeferenced orthomosaics and vegetation indices powered by automated computer vision.</p>
-            <a href="#mosaic" class="cta-button">Explore Data</a>
+            <p class="hero-subtitle">Georeferenced orthomosaics, 3D Point Clouds, and vegetation indices powered by automated computer vision.</p>
+            <div class="hero-buttons">
+                <a href="#gis-map" class="cta-button">Explore GIS Map</a>
+                <a href="#sfm-3d" class="cta-button secondary-btn">View 3D Model</a>
+            </div>
         </section>
 
+        <!-- Analytics Section -->
         <section id="overview" class="section-container">
             <div class="section-header">
                 <h2>Flight Analytics</h2>
@@ -49,12 +72,12 @@
                         <span class="stat-value">52 High-Res JPGs</span>
                     </div>
                     <div class="stat-row">
-                        <span class="stat-label">Coverage Area</span>
+                        <span class="stat-label">Coverage Bounds</span>
                         <span class="stat-value">Lon [7.735, 7.737]</span>
                     </div>
                     <div class="stat-row">
-                        <span class="stat-label">Processing Pipeline</span>
-                        <span class="stat-value">SfM + Feature Matching</span>
+                        <span class="stat-label">SfM Points Generated</span>
+                        <span class="stat-value">366 (Sparse Mode)</span>
                     </div>
                 </div>
                 <div class="glass-card bento-item map-card">
@@ -66,27 +89,45 @@
             </div>
         </section>
 
-        <section id="mosaic" class="section-container">
+        <!-- GIS Leaflet Map Section -->
+        <section id="gis-map" class="section-container">
             <div class="section-header">
-                <h2>Seamless Orthomosaic Viewer</h2>
-                <p>Fully blended panoramic reconstruction using SIFT feature matching and RANSAC homography.</p>
+                <h2>Georeferenced Orthomosaic</h2>
+                <p>Interactive satellite map overlaid with the custom stitched orthomosaic using true GPS boundaries.</p>
             </div>
             
-            <div class="glass-card full-width-card interactive-viewer">
+            <div class="glass-card full-width-card map-container">
                 <div class="viewer-controls">
-                    <span class="badge">Interactive</span>
-                    <p>Hover to pan and inspect the high-resolution composite.</p>
+                    <span class="badge">Interactive Leaflet Map</span>
+                    <p>Scroll to zoom. Drag to pan. Observe the drone layer over OpenStreetMap.</p>
                 </div>
-                <div class="pan-container" id="mosaicPanContainer">
-                    <img src="assets/mosaic.jpg" alt="Seamless Stitched Mosaic" class="pan-image" id="mosaicImage">
+                <div id="leafletMap" style="height: 600px; width: 100%; border-bottom-left-radius: 16px; border-bottom-right-radius: 16px;"></div>
+            </div>
+        </section>
+
+        <!-- 3D SfM Section -->
+        <section id="sfm-3d" class="section-container">
+            <div class="section-header">
+                <h2>3D Structure from Motion (SfM)</h2>
+                <p>Point cloud reconstruction derived from triangulating 2D image features into 3D space using OpenCV.</p>
+            </div>
+            
+            <div class="glass-card full-width-card map-container">
+                <div class="viewer-controls">
+                    <span class="badge">Interactive WebGL</span>
+                    <p>Left Click: Rotate | Right Click: Pan | Scroll: Zoom</p>
+                </div>
+                <div id="threeViewer" style="height: 600px; width: 100%; position: relative; background: #000; border-bottom-left-radius: 16px; border-bottom-right-radius: 16px;">
+                    <div id="loading3d" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: var(--accent-color); font-weight: bold;">Loading 3D Point Cloud...</div>
                 </div>
             </div>
         </section>
 
+        <!-- Vegetation Section -->
         <section id="vegetation" class="section-container">
             <div class="section-header">
                 <h2>Vegetation Analysis (NCVI)</h2>
-                <p>Natural Color Vegetation Index highlighting plant health derived from visible light spectrum.</p>
+                <p>Natural Color Vegetation Index highlighting plant health derived from the visible light spectrum.</p>
             </div>
 
             <div class="comparison-grid">
@@ -107,15 +148,41 @@
                 </div>
             </div>
         </section>
+
+        <!-- Media Gallery Section -->
+        <section id="media-gallery" class="section-container">
+            <div class="section-header">
+                <h2>Raw Drone Data</h2>
+                <p>Explore the unedited source media and short telemetry video clips.</p>
+            </div>
+
+            <h3 class="gallery-title">Video Telemetry Clips</h3>
+            <div id="videoGallery" class="video-grid">
+                <!-- Videos injected by app.js -->
+            </div>
+
+            <h3 class="gallery-title" style="margin-top: 4rem;">Unprocessed Image Dataset</h3>
+            <div id="imageGallery" class="masonry-grid">
+                <!-- Images injected by app.js -->
+            </div>
+        </section>
+
     </main>
 
     <footer>
         <div class="glass-card footer-content">
             <p>Drone Image Processing Pipeline &copy; 2026. Built by <a href="https://github.com/norbertmuzila" target="_blank" class="accent">Norbert Muzila</a>.</p>
-            <p class="small-text">Powered by Python, OpenCV, and Rasterio.</p>
+            <p class="small-text">Powered by Python, OpenCV, Rasterio, Leaflet, and Three.js.</p>
         </div>
     </footer>
 
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    
+    <!-- Main Logic -->
     <script src="app.js"></script>
+    
+    <!-- 3D Viewer Logic -->
+    <script type="module" src="3dviewer.js"></script>
 </body>
 </html>

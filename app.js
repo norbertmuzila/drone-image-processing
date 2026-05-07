@@ -1,42 +1,76 @@
-// Interactive Image Panner for High-Res Mosaic
-document.addEventListener('DOMContentLoaded', () => {
-    const container = document.getElementById('mosaicPanContainer');
-    const image = document.getElementById('mosaicImage');
+// Initialize Leaflet Map
+function initMap() {
+    // Exact GPS Bounds from Python Script
+    const bounds = [[48.52117, 7.73573], [48.52360, 7.73789]];
     
-    if (container && image) {
-        container.addEventListener('mousemove', (e) => {
-            // Get dimensions
-            const containerRect = container.getBoundingClientRect();
-            
-            // Calculate mouse position relative to container (0 to 1)
-            const xPercent = (e.clientX - containerRect.left) / containerRect.width;
-            const yPercent = (e.clientY - containerRect.top) / containerRect.height;
-            
-            // Calculate the maximum scroll amount
-            const maxX = image.clientWidth - containerRect.width;
-            const maxY = image.clientHeight - containerRect.height;
-            
-            // Apply transform based on percentage
-            const translateX = -xPercent * maxX;
-            const translateY = -yPercent * maxY;
-            
-            image.style.transform = `translate(${translateX}px, ${translateY}px)`;
+    // Create map centered on the orthomosaic
+    const map = L.map('leafletMap').fitBounds(bounds);
+    
+    // Add OpenStreetMap dark basemap
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+        subdomains: 'abcd',
+        maxZoom: 20
+    }).addTo(map);
+
+    // Overlay the orthomosaic Image
+    // Since TIFF doesn't render in browser natively, we use the high-res mosaic.jpg 
+    // mapped to the exact TIFF GPS boundaries.
+    const imageUrl = 'assets/mosaic.jpg';
+    L.imageOverlay(imageUrl, bounds, {
+        opacity: 0.9,
+        interactive: true
+    }).addTo(map);
+}
+
+// Load Gallery Data
+async function loadGalleries() {
+    try {
+        const response = await fetch('assets/data.json');
+        const data = await response.json();
+        
+        // Populate Video GIFs
+        const videoGrid = document.getElementById('videoGallery');
+        data.videos.forEach(vid => {
+            if(vid.endsWith('.gif')) {
+                const item = document.createElement('div');
+                item.className = 'video-item';
+                item.innerHTML = `
+                    <img src="assets/videos/${vid}" alt="Drone Telemetry Clip" loading="lazy">
+                    <div class="video-label">${vid.replace('.gif', '')}</div>
+                `;
+                videoGrid.appendChild(item);
+            }
+        });
+
+        // Populate Image Thumbnails
+        const imageGrid = document.getElementById('imageGallery');
+        data.gallery.forEach(img => {
+            if(img.startsWith('thumb_')) {
+                const originalName = img.replace('thumb_', '');
+                const item = document.createElement('div');
+                item.className = 'gallery-item';
+                // Note: linking to full-res images theoretically (not uploaded to save GitHub space)
+                item.innerHTML = `
+                    <a href="javascript:alert('Full 8MB RAW image is archived locally to prevent GitHub repo bloat.')">
+                        <img src="assets/gallery/${img}" alt="Raw Drone Image" loading="lazy">
+                    </a>
+                `;
+                imageGrid.appendChild(item);
+            }
         });
         
-        // Reset when mouse leaves
-        container.addEventListener('mouseleave', () => {
-            image.style.transform = `translate(0px, 0px)`;
-            image.style.transition = 'transform 0.5s ease';
-            
-            setTimeout(() => {
-                image.style.transition = 'transform 0.1s ease-out';
-            }, 500);
-        });
+    } catch (e) {
+        console.error("Failed to load gallery data:", e);
     }
+}
 
-    // Add intersection observer for scroll animations
-    const sections = document.querySelectorAll('.section-container');
+document.addEventListener('DOMContentLoaded', () => {
+    initMap();
+    loadGalleries();
     
+    // Intersection Observer for scroll animations
+    const sections = document.querySelectorAll('.section-container');
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
@@ -44,9 +78,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 entry.target.style.transform = 'translateY(0)';
             }
         });
-    }, {
-        threshold: 0.1
-    });
+    }, { threshold: 0.1 });
 
     sections.forEach(section => {
         section.style.opacity = 0;
