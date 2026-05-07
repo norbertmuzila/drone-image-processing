@@ -97,9 +97,12 @@
             </div>
             
             <div class="glass-card full-width-card map-container">
-                <div class="viewer-controls">
-                    <span class="badge">Interactive Leaflet Map</span>
-                    <p>Scroll to zoom. Drag to pan. Observe the drone layer over OpenStreetMap.</p>
+                <div class="viewer-controls" style="justify-content: space-between;">
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <span class="badge">Interactive Leaflet Map</span>
+                        <p>Scroll to zoom. Drag to pan. Observe the drone layer over OpenStreetMap.</p>
+                    </div>
+                    <a href="assets/orthomosaic.tif" download="orthomosaic.tif" class="cta-button" style="padding: 0.5rem 1.5rem; font-size: 0.9rem;">⬇ Download Raw GeoTIFF</a>
                 </div>
                 <div id="leafletMap" style="height: 600px; width: 100%; border-bottom-left-radius: 16px; border-bottom-right-radius: 16px;"></div>
             </div>

@@ -29,30 +29,45 @@ async function loadGalleries() {
         const response = await fetch('assets/data.json');
         const data = await response.json();
         
-        // Populate Video GIFs
+        // Populate Video GIFs and Real Video
         const videoGrid = document.getElementById('videoGallery');
+        
+        // Add the real 32MB MP4 video manually first
+        const realVidItem = document.createElement('div');
+        realVidItem.className = 'video-item';
+        realVidItem.innerHTML = `
+            <video controls style="width: 100%; height: auto; display: block;" preload="metadata">
+                <source src="assets/videos/DJI_20260507105418_0063_D.MP4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            <div class="video-label">Full Quality MP4 (32MB)</div>
+        `;
+        videoGrid.appendChild(realVidItem);
+
         data.videos.forEach(vid => {
             if(vid.endsWith('.gif')) {
+                // Skip the gif for the one we just added the real video for
+                if(vid.includes('0063')) return;
+                
                 const item = document.createElement('div');
                 item.className = 'video-item';
                 item.innerHTML = `
                     <img src="assets/videos/${vid}" alt="Drone Telemetry Clip" loading="lazy">
-                    <div class="video-label">${vid.replace('.gif', '')}</div>
+                    <div class="video-label">${vid.replace('.gif', '')} (GIF Preview)</div>
                 `;
                 videoGrid.appendChild(item);
             }
         });
 
-        // Populate Image Thumbnails
+        // Populate Image Thumbnails -> Link to High Res
         const imageGrid = document.getElementById('imageGallery');
         data.gallery.forEach(img => {
             if(img.startsWith('thumb_')) {
                 const originalName = img.replace('thumb_', '');
                 const item = document.createElement('div');
                 item.className = 'gallery-item';
-                // Note: linking to full-res images theoretically (not uploaded to save GitHub space)
                 item.innerHTML = `
-                    <a href="javascript:alert('Full 8MB RAW image is archived locally to prevent GitHub repo bloat.')">
+                    <a href="assets/gallery/high_res/${originalName}" target="_blank">
                         <img src="assets/gallery/${img}" alt="Raw Drone Image" loading="lazy">
                     </a>
                 `;
