@@ -10,8 +10,8 @@ const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x050505);
 
 // Camera
-const camera = new THREE.PerspectiveCamera(50, container.clientWidth / container.clientHeight, 0.1, 1000);
-camera.position.set(0, -2, 5); // Adjust based on point cloud scale
+const camera = new THREE.PerspectiveCamera(50, container.clientWidth / container.clientHeight, 1, 1000000);
+camera.position.set(0, 0, 1000); // Start further back
 
 // Renderer
 const renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -58,6 +58,8 @@ loader.load(
             geometry.boundingBox.max.y - geometry.boundingBox.min.y,
             geometry.boundingBox.max.z - geometry.boundingBox.min.z
         );
+        
+        points.material.size = maxDim / 100; // Dynamically scale point size
         camera.position.z = maxDim * 1.5;
         controls.update();
     },
