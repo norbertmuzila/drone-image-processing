@@ -1,21 +1,13 @@
 // Initialize Leaflet Map
 function initMap() {
-    // Exact GPS Bounds from Python Script
     const bounds = [[48.52117, 7.73573], [48.52360, 7.73789]];
-    
-    // Create map centered on the orthomosaic
     const map = L.map('leafletMap').fitBounds(bounds);
-    
-    // Add OpenStreetMap dark basemap
     L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
         subdomains: 'abcd',
         maxZoom: 20
     }).addTo(map);
 
-    // Overlay the orthomosaic Image
-    // Since TIFF doesn't render in browser natively, we use the high-res mosaic.jpg 
-    // mapped to the exact TIFF GPS boundaries.
     const imageUrl = 'assets/mosaic.jpg';
     L.imageOverlay(imageUrl, bounds, {
         opacity: 0.9,
@@ -28,11 +20,8 @@ async function loadGalleries() {
     try {
         const response = await fetch('assets/data.json');
         const data = await response.json();
-        
-        // Populate Video GIFs and Real Video
+
         const videoGrid = document.getElementById('videoGallery');
-        
-        // Add the real 32MB MP4 video manually first
         const realVidItem = document.createElement('div');
         realVidItem.className = 'video-item';
         realVidItem.innerHTML = `
@@ -45,10 +34,8 @@ async function loadGalleries() {
         videoGrid.appendChild(realVidItem);
 
         data.videos.forEach(vid => {
-            if(vid.endsWith('.gif')) {
-                // Skip the gif for the one we just added the real video for
-                if(vid.includes('0063')) return;
-                
+            if (vid.endsWith('.gif')) {
+                if (vid.includes('0063')) return;
                 const item = document.createElement('div');
                 item.className = 'video-item';
                 item.innerHTML = `
@@ -59,10 +46,9 @@ async function loadGalleries() {
             }
         });
 
-        // Populate Image Thumbnails -> Link to High Res
         const imageGrid = document.getElementById('imageGallery');
         data.gallery.forEach(img => {
-            if(img.startsWith('thumb_')) {
+            if (img.startsWith('thumb_')) {
                 const originalName = img.replace('thumb_', '');
                 const item = document.createElement('div');
                 item.className = 'gallery-item';
@@ -74,16 +60,45 @@ async function loadGalleries() {
                 imageGrid.appendChild(item);
             }
         });
-        
+
     } catch (e) {
         console.error("Failed to load gallery data:", e);
+    }
+}
+
+// Robust PDF download fallback (works even if browser download attribute is unreliable)
+async function robustDownload(url, filename) {
+    try {
+        const r = await fetch(url);
+        if (!r.ok) throw new Error('Network response was not ok');
+        const blob = await r.blob();
+        const blobUrl = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = blobUrl;
+        link.download = filename || url.split('/').pop();
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        URL.revokeObjectURL(blobUrl);
+    } catch (err) {
+        console.error('Download fallback failed, opening file in new tab:', err);
+        window.open(url, '_blank');
     }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
     initMap();
     loadGalleries();
-    
+
+    // Attach robust download handler to ISU report link
+    const reportLink = document.getElementById('downloadReport');
+    if (reportLink) {
+        reportLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            robustDownload(reportLink.href, 'Drone_GIS_Report.pdf');
+        });
+    }
+
     // Intersection Observer for scroll animations
     const sections = document.querySelectorAll('.section-container');
     const observer = new IntersectionObserver((entries) => {
