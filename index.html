@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drone GIS Analytics Platform</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Outfit:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="background-effects">
+        <div class="glow-orb orb-1"></div>
+        <div class="glow-orb orb-2"></div>
+    </div>
+
+    <header class="glass-nav">
+        <div class="logo">
+            <span class="logo-text">AERO<span class="accent">VUE</span></span>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="#overview">Overview</a></li>
+                <li><a href="#mosaic">Mosaic Viewer</a></li>
+                <li><a href="#vegetation">Vegetation Analysis</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <h1 class="hero-title">High-Fidelity <br><span class="accent-gradient">Drone Intelligence</span></h1>
+            <p class="hero-subtitle">Georeferenced orthomosaics and vegetation indices powered by automated computer vision.</p>
+            <a href="#mosaic" class="cta-button">Explore Data</a>
+        </section>
+
+        <section id="overview" class="section-container">
+            <div class="section-header">
+                <h2>Flight Analytics</h2>
+                <div class="line-decorator"></div>
+            </div>
+            
+            <div class="bento-grid">
+                <div class="glass-card bento-item stats-card">
+                    <h3>Dataset Overview</h3>
+                    <div class="stat-row">
+                        <span class="stat-label">Total Images Processed</span>
+                        <span class="stat-value">52 High-Res JPGs</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">Coverage Area</span>
+                        <span class="stat-value">Lon [7.735, 7.737]</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">Processing Pipeline</span>
+                        <span class="stat-value">SfM + Feature Matching</span>
+                    </div>
+                </div>
+                <div class="glass-card bento-item map-card">
+                    <h3>GPS Flight Path</h3>
+                    <div class="image-wrapper">
+                        <img src="assets/flight_path.png" alt="Drone Flight Path Map" loading="lazy">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="mosaic" class="section-container">
+            <div class="section-header">
+                <h2>Seamless Orthomosaic Viewer</h2>
+                <p>Fully blended panoramic reconstruction using SIFT feature matching and RANSAC homography.</p>
+            </div>
+            
+            <div class="glass-card full-width-card interactive-viewer">
+                <div class="viewer-controls">
+                    <span class="badge">Interactive</span>
+                    <p>Hover to pan and inspect the high-resolution composite.</p>
+                </div>
+                <div class="pan-container" id="mosaicPanContainer">
+                    <img src="assets/mosaic.jpg" alt="Seamless Stitched Mosaic" class="pan-image" id="mosaicImage">
+                </div>
+            </div>
+        </section>
+
+        <section id="vegetation" class="section-container">
+            <div class="section-header">
+                <h2>Vegetation Analysis (NCVI)</h2>
+                <p>Natural Color Vegetation Index highlighting plant health derived from visible light spectrum.</p>
+            </div>
+
+            <div class="comparison-grid">
+                <div class="glass-card">
+                    <h3>NCVI Heatmap</h3>
+                    <div class="image-wrapper">
+                        <img src="assets/ncvi.jpg" alt="NCVI Heatmap" loading="lazy">
+                    </div>
+                    <div class="card-footer">
+                        <p>Red/Yellow indicates soil/roads. Green indicates healthy, dense vegetation.</p>
+                    </div>
+                </div>
+                <div class="glass-card">
+                    <h3>Analytical Plot</h3>
+                    <div class="image-wrapper reference-wrapper">
+                        <img src="assets/ncvi_plot.png" alt="NCVI Analytical Plot" loading="lazy">
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="glass-card footer-content">
+            <p>Drone Image Processing Pipeline &copy; 2026. Built by <a href="https://github.com/norbertmuzila" target="_blank" class="accent">Norbert Muzila</a>.</p>
+            <p class="small-text">Powered by Python, OpenCV, and Rasterio.</p>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
