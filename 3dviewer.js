@@ -149,6 +149,11 @@ loader.load(
             mapPlane.position.y = -(size.z / 2) - (maxDim * 0.05);
         }
 
+        // Adjust camera planes to accommodate massive global scales
+        camera.near = Math.max(0.1, maxDim / 10000);
+        camera.far = Math.max(100000, maxDim * 10);
+        camera.updateProjectionMatrix();
+
         // Camera
         camera.position.set(maxDim * 0.4, maxDim * 0.6, maxDim * 1.0);
         camera.lookAt(0, 0, 0);
@@ -157,18 +162,17 @@ loader.load(
         controls.update();
 
         // Fog
-        scene.fog.density = 0.8 / maxDim;
+        scene.fog.density = 1.0 / maxDim;
         params.fogDensity = scene.fog.density;
 
         // GUI
         params.pointSize = material.size;
 
         const sfm = gui.addFolder('Point Cloud');
-        sfm.add(params, 'pointSize', 0.001, maxDim / 10).name('Point Size').onChange(v => material.size = v);
+        sfm.add(params, 'pointSize', maxDim / 1000, maxDim / 10).name('Point Size').onChange(v => material.size = v);
         sfm.add(params, 'pointOpacity', 0.05, 1.0).name('Opacity').onChange(v => material.opacity = v);
         sfm.add(params, 'colorBoost', 0.5, 3.0).name('Color Boost').onChange(v => {
             if (!hasColor) return;
-            // Re-read original colours would be ideal, but for live preview just re-multiply
             params.colorBoost = v;
         });
 
@@ -182,7 +186,7 @@ loader.load(
             scene.fog.color.set(v);
         });
         env.add(params, 'autoRotate').name('Auto Rotate').onChange(v => controls.autoRotate = v);
-        env.add(params, 'fogDensity', 0, 0.005).name('Fog').onChange(v => scene.fog.density = v);
+        env.add(params, 'fogDensity', 0, 5.0 / maxDim).name('Fog').onChange(v => scene.fog.density = v);
 
         gui.open();
     },
