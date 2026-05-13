@@ -462,3 +462,93 @@ footer {
     color: var(--accent-color) !important;
 }
 
+/* Logo Icon */
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+.logo-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    object-fit: contain;
+}
+
+/* Report Download Button */
+.report-btn {
+    background: rgba(0, 229, 255, 0.08) !important;
+    border-color: var(--accent-color) !important;
+    color: var(--accent-color) !important;
+    animation: reportPulse 3s ease-in-out infinite;
+}
+.report-btn:hover {
+    background: var(--accent-color) !important;
+    color: var(--bg-color) !important;
+    animation: none;
+}
+@keyframes reportPulse {
+    0%, 100% { box-shadow: 0 0 10px rgba(0, 229, 255, 0.15); }
+    50% { box-shadow: 0 0 25px rgba(0, 229, 255, 0.35); }
+}
+
+/* SfM Section Enhancements */
+.sfm-card {
+    padding: 0;
+    overflow: hidden;
+}
+.sfm-controls {
+    background: rgba(10, 14, 23, 0.8);
+    border-bottom: 1px solid rgba(0, 229, 255, 0.15);
+}
+.badge-3d {
+    background: rgba(0, 229, 255, 0.15) !important;
+}
+.badge-pts {
+    background: rgba(92, 225, 230, 0.12) !important;
+    color: #5ce1e6 !important;
+    border-color: rgba(92, 225, 230, 0.3) !important;
+}
+
+/* 3D Loading Spinner */
+.loading-3d {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    color: var(--accent-color);
+    font-weight: 600;
+    font-size: 0.95rem;
+    z-index: 10;
+}
+.loading-spinner {
+    width: 48px;
+    height: 48px;
+    border: 3px solid rgba(0, 229, 255, 0.15);
+    border-top-color: var(--accent-color);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* lil-gui overrides to match dark theme */
+#threeViewer .lil-gui {
+    --background-color: rgba(10, 14, 23, 0.92);
+    --widget-color: rgba(0, 229, 255, 0.2);
+    --focus-color: rgba(0, 229, 255, 0.5);
+    --number-color: #00e5ff;
+    --string-color: #5ce1e6;
+    --title-background-color: rgba(0, 229, 255, 0.08);
+    --title-text-color: #00e5ff;
+    font-family: 'Inter', sans-serif !important;
+    border: 1px solid rgba(0, 229, 255, 0.12);
+    border-radius: 12px;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+}

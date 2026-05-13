@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Drone GIS Analytics Platform</title>
+    <title>AeroVue — Drone GIS Analytics Platform</title>
+    <meta name="description" content="High-fidelity drone intelligence platform featuring georeferenced orthomosaics, 3D SfM point clouds, and vegetation analysis powered by computer vision.">
     
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -34,6 +35,7 @@
 
     <header class="glass-nav">
         <div class="logo">
+            <img src="assets/aerovue_logo.png" alt="AeroVue" class="logo-icon">
             <span class="logo-text">AERO<span class="accent">VUE</span></span>
         </div>
         <nav>
@@ -54,7 +56,7 @@
             <div class="hero-buttons">
                 <a href="#gis-map" class="cta-button">Explore GIS Map</a>
                 <a href="#sfm-3d" class="cta-button secondary-btn">View 3D Model</a>
-                <a href="assets/Drone_GIS_Report.pdf" download class="cta-button secondary-btn" style="background: rgba(255,255,255,0.05);">⬇ PDF Report</a>
+                <a href="assets/AeroVue_Report.pdf" download class="cta-button report-btn">⬇ Academic Report (PDF)</a>
             </div>
         </section>
 
@@ -78,7 +80,11 @@
                     </div>
                     <div class="stat-row">
                         <span class="stat-label">SfM Points Generated</span>
-                        <span class="stat-value">366 (Sparse Mode)</span>
+                        <span class="stat-value">55,534 (Dense)</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">Ground Sampling</span>
+                        <span class="stat-value">≈ 2.4 cm/px</span>
                     </div>
                 </div>
                 <div class="glass-card bento-item map-card">
@@ -113,16 +119,22 @@
         <section id="sfm-3d" class="section-container">
             <div class="section-header">
                 <h2>3D Structure from Motion (SfM)</h2>
-                <p>Point cloud reconstruction derived from triangulating 2D image features into 3D space using OpenCV.</p>
+                <p>Dense point cloud reconstruction (55,534 vertices) derived from triangulating 2D image features into 3D space using incremental multi-view SfM with OpenCV.</p>
             </div>
             
-            <div class="glass-card full-width-card map-container">
-                <div class="viewer-controls">
-                    <span class="badge">Interactive WebGL</span>
-                    <p>Left Click: Rotate | Right Click: Pan | Scroll: Zoom</p>
+            <div class="glass-card full-width-card sfm-card">
+                <div class="viewer-controls sfm-controls">
+                    <div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+                        <span class="badge badge-3d">Interactive WebGL</span>
+                        <span class="badge badge-pts">55,534 Points</span>
+                        <p>Left Click: Rotate | Right Click: Pan | Scroll: Zoom | Use panel to adjust rendering</p>
+                    </div>
                 </div>
-                <div id="threeViewer" style="height: 600px; width: 100%; position: relative; background: #000; border-bottom-left-radius: 16px; border-bottom-right-radius: 16px;">
-                    <div id="loading3d" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: var(--accent-color); font-weight: bold;">Loading 3D Point Cloud...</div>
+                <div id="threeViewer" style="height: 700px; width: 100%; position: relative; background: radial-gradient(ellipse at center, #0d1117 0%, #000 100%); border-bottom-left-radius: 16px; border-bottom-right-radius: 16px;">
+                    <div id="loading3d" class="loading-3d">
+                        <div class="loading-spinner"></div>
+                        <span>Loading Dense 3D Point Cloud...</span>
+                    </div>
                 </div>
             </div>
         </section>
